@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Ang Beshy Ko</title>
+    <link rel="icon" type="x-icon" href="cartwheel.png">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-size: 18px;
+        }
+
+        /* CSS styles for smaller screens (mobile phones) */
+        @media only screen and (max-width: 600px) {
+            .container {
+                max-width: 90%;
+                width: 90%;
+            }
+
+            .textboxes {
+                flex-direction: column;
+            }
+
+            .textbox {
+                height: 150px;
+                font-size: 16px;
+            }
+        }
+
+        /* CSS styles omitted for brevity */
+        .highlight {
+            background-color: rgb(64, 64, 64);
+            color: rgb(255, 255, 255);
+        }
+        .emoji {
+            font-size: 50px;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 800px;
+            padding: 10px;
+        }
+        
+        .textboxes {
+            display: flex;
+            flex-direction: row;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .textbox {
+            flex: 1;
+            height: 300px;
+            padding: 50px;
+            margin-right: 10px; /* Add margin-right to create space between text boxes */
+            border: 1px solid #ccc;
+            resize: none;
+            box-sizing: border-box;
+            font-size: 20px; /* Increase the text size */
+        }
+
+        .textbox:first-child {
+            margin-bottom: 10px; /* Add margin-bottom to create space between the text boxes and the mode toggle */
+        }
+        
+        .mode-toggle {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .mode-toggle button {
+            background-color: #ccc;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            border-radius: 50%;
+        }
+
+        .mode-toggle button.dark-mode {
+            background-color: #555;
+            color: #fff;
+        }
+
+        .mode-toggle button.dark-mode span {
+            animation: rotateText 0.3s linear;
+        }
+
+        .mode-toggle button.light-mode {
+            margin-right: 10px; /* Add this line to create space between buttons */
+        }
+
+        .mode-toggle button.clear-button {
+            margin-right: 1px; /* Add this line to create space between Clear and Copy buttons */
+        }
+
+        .mode-toggle button.copy-button {
+            margin-left: 10px; /* Add this line to create space between Clear and Copy buttons */
+        }
+
+        .copy-button:hover {
+            background-color: #555;
+            color: #fff;
+        }
+
+        .clear-button:hover {
+            background-color: #555;
+            color: #fff;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 5px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .show-notification {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .watermark {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            font-size: 14px;
+            color: #888;
+        }
+        
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #1f1f1f;
+            color: #fff;
+        }
+        
+        body.dark-mode .textbox {
+            background-color: #333;
+            border-color: #888;
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>
+            <span class="emoji">&#129336;</span>
+            Ang Beshy Ko
+            <span class="emoji">&#129336;</span>
+        </h1>
+        <div class="mode-toggle">
+            <button onclick="toggleDarkMode()" class="light-mode">
+                <span>Light Mode</span>
+            </button>
+            <button onclick="clearText()" class="clear-button">
+                Clear
+            </button>
+            <button id="copyButton" onclick="copyResult()" class="copy-button">
+                Copy Result
+            </button>
+        </div>
+        <div class="textboxes">
+            <textarea class="textbox" id="textInput" oninput="showResult()" placeholder="Enter your text..."></textarea>
+            <textarea class="textbox" id="resultText" disabled></textarea>
+        </div>
+    </div>
+    
+    <div class="notification" id="notification">Copied!</div>
+    
+    <div class="watermark">
+        Adriano, Charles Joseph C. | Webpage Version 1.0.0
+    </div>
+
+    <script>
+        // Attach event listener to the input element
+        document.getElementById("textInput").addEventListener("input", showResult);
+
+        // Attach event listener to the "Copy Result" button
+        document.getElementById("copyButton").addEventListener("click", copyResult);
+
+        function showResult() {
+            var inputText = document.getElementById("textInput").value;
+            var resultBox = document.getElementById("resultText");
+            var resultText = inputText.replace(/ /g, " " + String.fromCodePoint(129336) + " ");
+            resultBox.value = resultText;
+        }
+
+        function toggleDarkMode() {
+            var body = document.body;
+            var modeButton = document.querySelector(".mode-toggle button.light-mode");
+            var modeButtonText = document.querySelector(".mode-toggle button.light-mode span");
+
+            body.classList.toggle("dark-mode");
+            modeButton.classList.toggle("dark-mode");
+
+            if (body.classList.contains("dark-mode")) {
+                modeButtonText.textContent = "Dark Mode";
+            } else {
+                modeButtonText.textContent = "Light Mode";
+            }
+        }
+
+        function copyResult() {
+            var resultBox = document.getElementById("resultText");
+            resultBox.select();
+
+            // Use the Clipboard API to copy the selected text
+            navigator.clipboard.writeText(resultBox.value)
+                .then(function() {
+                    // Copy success
+                    resultBox.setSelectionRange(0, 0);
+                    resultBox.classList.add("highlight");
+                    setTimeout(function () {
+                        resultBox.classList.remove("highlight");
+                    }, 2000);
+
+                    var notification = document.getElementById("notification");
+                    notification.classList.add("show-notification");
+                    setTimeout(function () {
+                        notification.classList.remove("show-notification");
+                    }, 2000);
+                })
+                .catch(function(err) {
+                    // Copy error
+                    console.error('Failed to copy: ', err);
+                });
+        }
+
+        function clearText() {
+            document.getElementById("textInput").value = "";
+            document.getElementById("resultText").value = "";
+        }
+
+        // Clear the text on page refresh
+        window.addEventListener("beforeunload", function () {
+            document.getElementById("textInput").value = "";
+            document.getElementById("resultText").value = "";
+        });
+    </script>
+</body>
+</html>
